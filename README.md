@@ -1,0 +1,1 @@
+# akamai-spinkube-demo
