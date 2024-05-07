@@ -50,6 +50,7 @@ resource "helm_release" "cloudcore" {
   name  = "cloudcore"
   chart = "./charts/cloudcore"
   namespace = "kubeedge"
+  create_namespace = true
 
   values = [
     "${file("./charts/cloudcore/values.yaml")}"
