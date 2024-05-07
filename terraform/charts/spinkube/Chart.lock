@@ -1,0 +1,9 @@
+dependencies:
+- name: cert-manager
+  repository: https://charts.jetstack.io
+  version: v1.14.5
+- name: spin-operator
+  repository: file://charts/spin-operator
+  version: 0.1.0
+digest: sha256:8ffe638c5dcaf880646de1884c71b9f55a191bd6fb88484b7adf4335ef96b80b
+generated: "2024-05-06T19:00:57.292445-07:00"
