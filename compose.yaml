@@ -1,0 +1,10 @@
+# This exists to make it easy to run keadm on Apple Silicon.
+# Just run build then run `docker compose run keadm` to get a join token.
+# Alternatively you can run other keadm commands by adding them after keadm.
+
+services:
+    keadm:
+        build:
+            context: .
+            dockerfile: keadm.dockerfile
+        command: "gettoken --kube-config /kubeconfig.yaml"
