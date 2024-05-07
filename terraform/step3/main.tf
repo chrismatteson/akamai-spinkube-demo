@@ -87,6 +87,8 @@ resource "linode_instance" "follower" {
   provisioner "remote-exec" {
     inline = [
       "apt-get update",
+      "systemctl stop apparmor",
+      "systemctl disable apparmor",
       "apt-get install -y wget containerd runc apt-transport-https ca-certificates curl gpg",
       "wget https://github.com/kubeedge/kubeedge/releases/download/v${var.kubeedge_version}/keadm-v${var.kubeedge_version}-linux-${var.kubeedge_arch}64.tar.gz",
       "curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg",
@@ -97,7 +99,7 @@ resource "linode_instance" "follower" {
       "sudo systemctl enable --now kubelet",
       "tar -zxvf keadm-v${var.kubeedge_version}-linux-${var.kubeedge_arch}64.tar.gz",
       "cp keadm-v${var.kubeedge_version}-linux-${var.kubeedge_arch}64/keadm/keadm /usr/local/bin/keadm",
-      "keadm join --cloudcore-ipport='${local.cloudcore_ip}:10000' --edgenode-name='${linode_instance.follower[each.key].label}' --token=${data.kubernetes_secret.token.data.tokendata} --kubeedge-version=v1.17.0"
+      "keadm join --cloudcore-ipport='${local.cloudcore_ip}:10000' --edgenode-name=${linode_instance.follower[each.key].label} --token=${data.kubernetes_secret.token.data.tokendata} --kubeedge-version=v1.17.0"
     ]
   }
 }
