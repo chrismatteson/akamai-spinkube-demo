@@ -6,6 +6,6 @@ variable "tags" {
   default = []
 }
 
-variable "leader_region" {
+variable "region" {
   default = "us-central"
 }

@@ -46,24 +46,8 @@ provider "kubernetes" {
 
 data "kubernetes_nodes" "nodes" {}
 
-resource "helm_release" "cloudcore" {
-  name  = "cloudcore"
-  chart = "./charts/cloudcore"
-  namespace = "kubeedge"
-  create_namespace = true
-
-  values = [
-    "${file("./charts/cloudcore/values.yaml")}"
-  ]
-
-  set {
-    name = "cloudCore.modules.cloudHub.advertiseAddress[0]"
-    value = local.node_ips[0]
-  }
-}
-
 resource "helm_release" "spinkube" {
   name  = "spinkube"
-  chart = "./charts/spinkube"
+  chart = "../../charts/spinkube"
 }
 

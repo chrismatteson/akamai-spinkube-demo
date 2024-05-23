@@ -36,6 +36,7 @@ terraform.rc
 
 # Ignore kubeconfig files
 kubeconfig.yaml
+*-kubeconfig
 
 # Ignore pem files
 *.pem

@@ -24,10 +24,15 @@ locals {
   )
 }
 
-module "kubeedge" {
-  source = "./modules/kubeedge"
-  project_name = local.ProjectName
-  tags = local.tags
-  leader_region = var.leader_region
+resource "linode_lke_cluster" "lke" {
+    label       = "${local.ProjectName}-SpinKube"
+    k8s_version = "1.29"
+    region      = var.region
+    tags        = local.tags
+
+    pool {
+        type  = "g6-standard-2"
+        count = 1
+    }
 }
 

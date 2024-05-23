@@ -2,17 +2,19 @@ terraform {
   required_providers {
     linode = {
       source = "linode/linode"
+      # version = "..."
     }
-    helm = {}
   }
 }
 
+provider "linode" {
+}
+
 resource "random_id" "project_name" {
-  byte_length = 6
+  byte_length = 4
 }
 
 locals {
-  kubeconfig = yamldecode(base64decode(linode_lke_cluster.leader.kubeconfig))
   ProjectName = var.project_name == "" ? random_id.project_name.hex : var.project_name
   tags = concat(
     var.tags,
@@ -33,3 +35,4 @@ resource "linode_lke_cluster" "leader" {
         count = 1
     }
 }
+

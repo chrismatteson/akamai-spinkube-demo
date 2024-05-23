@@ -62,12 +62,12 @@ resource "random_uuid" "root_pass" {
 resource "linode_instance" "follower" {
   for_each = toset(var.edge_regions)
   label    = "${local.ProjectName}-${each.key}-instance"
-  image    = "linode/ubuntu24.04"
+  image    = "linode/debian12"
   authorized_keys = [
     chomp(tls_private_key.ssh_key.public_key_openssh)
   ]
   region    = each.key
-  type      = "g6-standard-2"
+  type      = "g6-edge-dedicated-2"
   root_pass = random_uuid.root_pass.id
 
   tags = local.tags
@@ -75,6 +75,10 @@ resource "linode_instance" "follower" {
   interface {
     purpose = "public"
   }
+}
+
+resource "null_resource" "null" {
+  for_each = toset(var.edge_regions) 
 
   connection {
     host        = linode_instance.follower[each.key].ip_address
@@ -95,7 +99,7 @@ resource "linode_instance" "follower" {
       "mkdir -p /opt/cni/bin",
       "tar Czxvf /opt/cni/bin cni-plugins-linux-amd64-v1.4.1.tgz",
       "mkdir -p /etc/cni/net.d/",
-      "wget https://raw.githubusercontent.com/chrismatteson/akamai-spinkube-demo/main/terraform/step3/bridge.conf",
+      "wget https://raw.githubusercontent.com/chrismatteson/akamai-spinkube-demo/main/spinkube-kubeedge/step3/bridge.conf",
       "mv bridge.conf /etc/cni/net.d/bridge.conf",
       "containerd config default > /etc/containerd/config.toml",
       "systemctl restart containerd",
@@ -114,7 +118,7 @@ resource "linode_instance" "follower" {
 }
 
 resource "kubernetes_manifest" "join" {
-  for_each = linode_instance.follower
+  for_each = null_resource.null
   manifest = {
     "kind": "Node",
     "apiVersion": "v1",
